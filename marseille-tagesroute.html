@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marseille Tagesroute – Start: Euromed Center</title>
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --secondary: #e8f0fe;
+            --accent: #f9ab00;
+            --dark: #202124;
+            --light: #f8f9fa;
+            --success: #34a853;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+        
+        .info-box {
+            background: var(--secondary);
+            border-left: 4px solid var(--primary);
+            padding: 1.2rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 2rem;
+        }
+        
+        .info-box h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .route-section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            color: var(--primary);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .stop-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 1.5rem;
+            margin-bottom: 1.2rem;
+            border-left: 4px solid var(--primary);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .stop-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        
+        .stop-card h3 {
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .stop-number {
+            background: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .stop-card .meta {
+            font-size: 0.9rem;
+            color: #5f6368;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stop-card p {
+            margin-bottom: 0.8rem;
+        }
+        
+        .stop-card .highlights {
+            font-size: 0.9rem;
+            color: #5f6368;
+            font-style: italic;
+        }
+        
+        .google-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        
+        .google-link:hover {
+            background: #0d47a1;
+        }
+        
+        .google-link.directions {
+            background: var(--success);
+        }
+        
+        .google-link.directions:hover {
+            background: #2e7d32;
+        }
+        
+        .links-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+        }
+        
+        .walking-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            background: #fff3e0;
+            border-radius: 8px;
+            margin-bottom: 1.2rem;
+            font-size: 0.9rem;
+            color: #e65100;
+        }
+        
+        .full-route-box {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .full-route-box h3 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .full-route-box .google-link {
+            font-size: 1rem;
+            padding: 0.7rem 1.5rem;
+        }
+        
+        .map-embed {
+            width: 100%;
+            height: 450px;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+        
+        .tips-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .tips-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .tips-section ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tips-section li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .tips-section li:last-child {
+            border-bottom: none;
+        }
+        
+        .tips-section li::before {
+            content: '💡';
+            position: absolute;
+            left: 0;
+        }
+        
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .summary-table th {
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 1rem;
+            text-align: left;
+        }
+        
+        .summary-table td {
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .summary-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .summary-table tr:hover td {
+            background: var(--secondary);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #5f6368;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            .container {
+                padding: 1rem;
+            }
+            .stop-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🏛️ Marseille an einem Tag</h1>
+    <p>Tagesroute ab Euromed Center – Die wichtigsten Sehenswürdigkeiten</p>
+</div>
+
+<div class="container">
+
+    <!-- Start Info -->
+    <div class="info-box">
+        <h3>🏨 Startpunkt: Euromed Center</h3>
+        <p><strong>Adresse:</strong> Place Henri Verne / Boulevard de Dunkerque, 13002 Marseille</p>
+        <p>Von hier aus erreichst du alle Sehenswürdigkeiten bequem zu Fuß. Die Route ist so geplant, dass du nach einem Rundgang abends wieder in der Nähe deines Hotels bist.</p>
+        <div class="links-row">
+            <a href="https://www.google.com/maps/place/Euromed+Center,+Marseille,+France" target="_blank" class="google-link">📍 Hotel auf Google Maps</a>
+        </div>
+    </div>
+
+    <!-- Komplette Route Link -->
+    <div class="full-route-box">
+        <h3>🗺️ Komplette Tagesroute auf Google Maps</h3>
+        <p style="margin-bottom: 1rem; color: #5f6368;">Alle Stopps als Wegpunkte – zu Fuß navigierbar</p>
+        <a href="https://www.google.com/maps/dir/Euromed+Center,+Marseille/Le+Panier,+Marseille/Cath%C3%A9drale+de+la+Major,+Marseille/MuCEM,+Marseille/Vieux-Port,+Marseille/Notre-Dame+de+la+Garde,+Marseille/Vallon+des+Auffes,+Marseille/Palais+du+Pharo,+Marseille/Vieux-Port,+Marseille/@43.2965,5.3698,14z/data=!3m1!4b1!4m56!4m55!1m5!1m1!1s0x12c9c0b5b6e4b0e1:0x3a4c5e8e8a8b0f0!2m2!1d5.3655!2d43.3106!1m5!1m1!1s0x12c9c0ed7e7a3e6d:0x40819a5fd8fc540!2m2!1d5.3677!2d43.2997!1m5!1m1!1s0x12c9c0ec42d3276d:0x5631d1b4e8b7e4e!2m2!1d5.3648!2d43.2997!1m5!1m1!1s0x12c9c0ec1f4d3a5b:0x4b6e8b7e4e5631d1!2m2!1d5.3612!2d43.2966!1m5!1m1!1s0x12c9c0b9f3c0e7a5:0x40819a5fd8fc8e0!2m2!1d5.3698!2d43.2951!1m5!1m1!1s0x12c9c0890bdbf8f5:0x40819a5fd8fd890!2m2!1d5.3714!2d43.2838!1m5!1m1!1s0x12c9c1044b5e8e1f:0x40819a5fd8fc930!2m2!1d5.3553!2d43.2883!1m5!1m1!1s0x12c9c0b1d7a3e6d1:0x40819a5fd8fc940!2m2!1d5.3589!2d43.2927!1m5!1m1!1s0x12c9c0b9f3c0e7a5:0x40819a5fd8fc8e0!2m2!1d5.3698!2d43.2951!3e2" target="_blank" class="google-link" style="font-size: 1.05rem; padding: 0.8rem 1.8rem;">
+            🚶 Gesamte Route in Google Maps öffnen
+        </a>
+    </div>
+
+    <!-- VORMITTAG -->
+    <div class="route-section">
+        <h2 class="section-title">☀️ Vormittag (ca. 8:30 – 12:30)</h2>
+
+        <div class="stop-card">
+            <h3><span class="stop-number">1</span> Vieux-Port (Alter Hafen)</h3>
+            <div class="meta">⏱️ 30–45 Min. | 🚶 10 Min. vom Hotel</div>
+            <p>Das Herz von Marseille. Morgens erlebst du den Fischmarkt in voller Aktion. Genieße einen Café am Quai und den Blick über das Hafenbecken mit den Festungen im Hintergrund.</p>
+            <p class="highlights">Highlights: Fischmarkt, Miroir d'Eau (Spiegelfläche von Norman Foster), Fähre "Ferry Boat"</p>
+            <div class="links-row">
+                <a href="https://www.google.com/maps/place/Vieux-Port+de+Marseille/@43.2951,5.3698,16z" target="_blank" class="google-link">📍 Google Maps</a>
+                <a href="https://www.google.com/maps/dir/Euromed+Center,+Marseille/Vieux-Port,+Marseille/@43.3,5.368,15z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x12c9c0b5b6e4b0e1:0x3a4c5e8e8a8b0f0!2m2!1d5.3655!2d43.3106!1m5!1m1!1s0x12c9c0b9f3c0e7a5:0x40819a5fd8fc8e0!2m2!1d5.3698!2d43.2951!3e2" target="_blank" class="google-link directions">🧭 Route vom Hotel</a>
+            </div>
+        </div>
+
+        <div class="walking-info">🚶 Ca. 10 Min. Fußweg → bergauf ins Panier-Viertel</div>
+
+        <div class="stop-card">
+            <h3><span class="stop-number">2</span> Le Panier – Altstadt</h3>
+            <div class="meta">⏱️ 60–90 Min. | Marseilles ältestes Viertel</div>
+            <p>Schmale, bunte Gassen voller Street Art, kleiner Ateliers und provenzalischer Atmosphäre. Lass dich treiben und entdecke versteckte Plätze und Treppen mit Meerblick.</p>
+            <p class="highlights">Highlights: Vieille Charité, Place des Moulins, Montée des Accoules, Savonnerie du Midi</p>
+            <div class="links-row">
+                <a href="https://www.google.com/maps/place/Le+Panier,+13002+Marseille,+France/@43.2985,5.3665,16z" target="_blank" class="google-link">📍 Google Maps</a>
+                <a href="https://www.google.com/maps/dir/Vieux-Port,+Marseille/Le+Panier,+Marseille/@43.297,5.368,16z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x12c9c0b9f3c0e7a5:0x40819a5fd8fc8e0!2m2!1d5.3698!2d43.2951!1m5!1m1!1s0x12c9c0ed7e7a3e6d:0x40819a5fd8fc540!2m2!1d5.3677!2d43.2997!3e2" target="_blank" class="google-link directions">🧭 Route hierher</a>
+            </div>
+        </div>
+
+        <div class="walking-info">🚶 Ca. 10 Min. Fußweg → Richtung Westen zur Küste</div>
+
+        <div class="stop-card">
+            <h3><span class="stop-number">3</span> Cathédrale de la Major</h3>
+            <div class="meta">⏱️ 20–30 Min. | Eintritt frei</div>
+            <p>Eine der größten Kathedralen Frankreichs im romanisch-byzantinischen Stil. Die gestreiften Steinmuster und die Lage direkt am Meer machen sie einzigartig.</p>
+            <p class="highlights">Highlights: Beeindruckendes Interieur, Aussichtsterrasse mit Meerblick</p>
+            <div class="links-row">
+                <a href="https://www.google.com/maps/place/Cath%C3%A9drale+de+la+Major,+Place+de+la+Major,+13002+Marseille/@43.2997,5.3648,17z" target="_blank" class="google-link">📍 Google Maps</a>
+                <a href="https://www.google.com/maps/dir/Le+Panier,+Marseille/Cath%C3%A9drale+de+la+Major,+Marseille/@43.299,5.365,16z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x12c9c0ed7e7a3e6d:0x40819a5fd8fc540!2m2!1d5.3677!2d43.2997!1m5!1m1!1s0x12c9c0ec42d3276d:0x5631d1b4e8b7e4e!2m2!1d5.3648!2d43.2997!3e2" target="_blank" class="google-link directions">🧭 Route hierher</a>
+            </div>
+        </div>
+
+        <div class="walking-info">🚶 Ca. 5 Min. → über die Fußgängerbrücke zum MuCEM</div>
+
+        <div class="stop-card">
+            <h3><span class="stop-number">4</span> MuCEM & Fort Saint-Jean</h3>
+            <div class="meta">⏱️ 60–90 Min. | Museum: ca. 11 € | Terrassen & Fort: kostenlos</div>
+            <p>Das spektakuläre Museum der Zivilisationen Europas und des Mittelmeers. Das Gebäude von Rudy Ricciotti mit seiner filigranen Betonfassade ist ein Highlight für sich. Das Fort Saint-Jean mit seinen Gärten bietet kostenlose Panoramablicke.</p>
+            <p class="highlights">Highlights: Dachterrasse, Passerelle (Hängebrücke), Gärten des Fort Saint-Jean, Ausstellungen</p>
+            <div class="links-row">
+                <a href="https://www.google.com/maps/place/MuCEM,+7+Prom.+Robert+Laffont,+13002+Marseille/@43.2966,5.3612,17z" target="_blank" class="google-link">📍 Google Maps</a>
+                <a href="https://www.google.com/maps/dir/Cath%C3%A9drale+de+la+Major,+Marseille/MuCEM,+Marseille/@43.298,5.362,16z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x12c9c0ec42d3276d:0x5631d1b4e8b7e4e!2m2!1d5.3648!2d43.2997!1m5!1m1!1s0x12c9c0ec1f4d3a5b:0x4b6e8b7e4e5631d1!2m2!1d5.3612!2d43.2966!3e2" target="_blank" class="google-link directions">🧭 Route hierher</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- NACHMITTAG -->
+    <div class="route-section">
+        <h2 class="section-title">🌞 Nachmittag (ca. 13:00 – 18:00)</h2>
+
+        <div class="stop-card" style="border-left-color: var(--accent);">
+            <h3><span class="stop-number" style="background: var(--accent);">5</span> Mittagessen</h3>
+            <div class="meta">⏱️ 60 Min. | Am Vieux-Port oder im Panier</div>
+            <p>Zeit für die berühmte <strong>Bouillabaisse</strong> (Fischsuppe) oder <strong>Panisse</strong> (Kichererbsen-Pommes). Empfehlung: Restaurant-Reihe am Quai du Port oder kleine Bistros im Panier.</p>
+            <div class="links-row">
+                <a href="https://www.google.com/maps/search/restaurant+bouillabaisse+Vieux-Port+Marseille/@43.2955,5.369,16z" target="_blank" class="google-link">🍽️ Restaurants suchen</a>
+            </div>
+        </div>
+
+        <div class="walking-info">🚌 Bus 60 ab Vieux-Port (15 Min.) ODER 🚶 30 Min. bergauf</div>
+
+        <div class="stop-card">
+            <h3><span class="stop-number">6</span> Notre-Dame de la Garde</h3>
+            <div class="meta">⏱️ 60–90 Min. | Eintritt frei | 160 m Höhe</div>
+            <p>Die "Bonne Mère" – das Wahrzeichen von Marseille. Die neo-byzantinische Basilika thront auf dem höchsten Punkt der Stadt und bietet ein 360°-Panorama über Marseille, das Meer, die Calanques und die Inseln Frioul & Château d'If.</p>
+            <p class="highlights">Highlights: Vergoldete Madonnenstatue, Mosaike im Inneren, atemberaubender Rundblick</p>
+            <div class="links-row">
+                <a href="https://www.google.com/maps/place/Basilique+Notre-Dame+de+la+Garde,+Rue+Fort+du+Sanctuaire,+13006+Marseille/@43.2838,5.3714,16z" target="_blank" class="google-link">📍 Google Maps</a>
+                <a href="https://www.google.com/maps/dir/Vieux-Port,+Marseille/Notre-Dame+de+la+Garde,+Marseille/@43.289,5.371,15z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x12c9c0b9f3c0e7a5:0x40819a5fd8fc8e0!2m2!1d5.3698!2d43.2951!1m5!1m1!1s0x12c9c0890bdbf8f5:0x40819a5fd8fd890!2m2!1d5.3714!2d43.2838!3e2" target="_blank" class="google-link directions">🧭 Route hierher (zu Fuß)</a>
+                <a href="https://www.google.com/maps/dir/Vieux-Port,+Marseille/Notre-Dame+de+la+Garde,+Marseille/@43.289,5.371,15z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x12c9c0b9f3c0e7a5:0x40819a5fd8fc8e0!2m2!1d5.3698!2d43.2951!1m5!1m1!1s0x12c9c0890bdbf8f5:0x40819a5fd8fd890!2m2!1d5.3714!2d43.2838!3e3" target="_blank" class="google-link directions" style="background: #e65100;">🚌 Route (ÖPNV)</a>
+            </div>
+        </div>
+
+        <div class="walking-info">🚶 Ca. 20 Min. bergab Richtung Küste</div>
+
+        <div class="stop-card">
+            <h3><span class="stop-number">7</span> Corniche Kennedy & Vallon des Auffes</h3>
+            <div class="meta">⏱️ 45–60 Min. | Küstenspaziergang</div>
+            <p>Die berühmte Küstenstraße bietet spektakuläre Klippen, türkises Wasser und den Blick auf die vorgelagerten Inseln. Ein Abstecher in den <strong>Vallon des Auffes</strong> – einen winzigen, malerischen Fischerhafen mit Brücke – ist ein Muss.</p>
+            <p class="highlights">Highlights: Vallon des Auffes, Plage des Catalans, Blick auf Frioul-Inseln</p>
+            <div class="links-row">
+                <a href="https://www.google.com/maps/place/Vallon+des+Auffes,+13007+Marseille/@43.2883,5.3553,17z" target="_blank" class="google-link">📍 Google Maps</a>
+                <a href="https://www.google.com/maps/dir/Notre-Dame+de+la+Garde,+Marseille/Vallon+des+Auffes,+Marseille/@43.285,5.362,15z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x12c9c0890bdbf8f5:0x40819a5fd8fd890!2m2!1d5.3714!2d43.2838!1m5!1m1!1s0x12c9c1044b5e8e1f:0x40819a5fd8fc930!2m2!1d5.3553!2d43.2883!3e2" target="_blank" class="google-link directions">🧭 Route hierher</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABEND -->
+    <div class="route-section">
+        <h2 class="section-title">🌅 Abend (ca. 18:00 – 21:00)</h2>
+
+        <div class="stop-card">
+            <h3><span class="stop-number">8</span> Palais du Pharo & Jardin du Pharo</h3>
+            <div class="meta">⏱️ 30 Min. | Eintritt frei | Perfekt für Sonnenuntergang</div>
+            <p>Napoleon III ließ diesen Palast mit Blick auf den Hafeneingang errichten. Der umliegende Park bietet einen der schönsten Sonnenuntergänge Marseilles – mit Panorama über den Vieux-Port und Notre-Dame de la Garde im Hintergrund.</p>
+            <div class="links-row">
+                <a href="https://www.google.com/maps/place/Palais+du+Pharo,+58+Bd+Charles+Livon,+13007+Marseille/@43.2927,5.3589,17z" target="_blank" class="google-link">📍 Google Maps</a>
+                <a href="https://www.google.com/maps/dir/Vallon+des+Auffes,+Marseille/Palais+du+Pharo,+Marseille/@43.29,5.357,16z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x12c9c1044b5e8e1f:0x40819a5fd8fc930!2m2!1d5.3553!2d43.2883!1m5!1m1!1s0x12c9c0b1d7a3e6d1:0x40819a5fd8fc940!2m2!1d5.3589!2d43.2927!3e2" target="_blank" class="google-link directions">🧭 Route hierher</a>
+            </div>
+        </div>
+
+        <div class="walking-info">🚶 Ca. 10 Min. → zurück zum Vieux-Port</div>
+
+        <div class="stop-card">
+            <h3><span class="stop-number">9</span> Abendessen am Vieux-Port</h3>
+            <div class="meta">⏱️ Abendprogramm | Genieße den beleuchteten Hafen</div>
+            <p>Zum Abschluss des Tages genießt du Meeresfrüchte oder provenzalische Küche mit Blick auf den erleuchteten Hafen. Ein Pastis zum Aperitif gehört dazu! Danach spazierst du in 15 Minuten zurück zum Euromed Center.</p>
+            <div class="links-row">
+                <a href="https://www.google.com/maps/search/restaurant+Vieux-Port+Marseille/@43.2951,5.3698,16z" target="_blank" class="google-link">🍽️ Restaurants am Hafen</a>
+                <a href="https://www.google.com/maps/dir/Vieux-Port,+Marseille/Euromed+Center,+Marseille/@43.3,5.368,15z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x12c9c0b9f3c0e7a5:0x40819a5fd8fc8e0!2m2!1d5.3698!2d43.2951!1m5!1m1!1s0x12c9c0b5b6e4b0e1:0x3a4c5e8e8a8b0f0!2m2!1d5.3655!2d43.3106!3e2" target="_blank" class="google-link directions">🏨 Zurück zum Hotel</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Übersichtstabelle -->
+    <h2 class="section-title" style="margin-top: 2rem;">📊 Übersicht</h2>
+    <table class="summary-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Ort</th>
+                <th>Dauer</th>
+                <th>Gehzeit zum nächsten</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>🏨</td><td>Euromed Center (Start)</td><td>—</td><td>10 Min.</td></tr>
+            <tr><td>1</td><td>Vieux-Port</td><td>30–45 Min.</td><td>10 Min.</td></tr>
+            <tr><td>2</td><td>Le Panier</td><td>60–90 Min.</td><td>10 Min.</td></tr>
+            <tr><td>3</td><td>Cathédrale de la Major</td><td>20–30 Min.</td><td>5 Min.</td></tr>
+            <tr><td>4</td><td>MuCEM & Fort Saint-Jean</td><td>60–90 Min.</td><td>10 Min.</td></tr>
+            <tr><td>5</td><td>Mittagessen</td><td>60 Min.</td><td>15 Min. (Bus)</td></tr>
+            <tr><td>6</td><td>Notre-Dame de la Garde</td><td>60–90 Min.</td><td>20 Min.</td></tr>
+            <tr><td>7</td><td>Corniche & Vallon des Auffes</td><td>45–60 Min.</td><td>15 Min.</td></tr>
+            <tr><td>8</td><td>Palais du Pharo</td><td>30 Min.</td><td>10 Min.</td></tr>
+            <tr><td>9</td><td>Abendessen Vieux-Port</td><td>Abend</td><td>15 Min. zum Hotel</td></tr>
+        </tbody>
+    </table>
+
+    <p style="text-align: center; margin: 1rem 0; font-size: 1.1rem;"><strong>Gesamte Gehstrecke: ca. 9–11 km</strong></p>
+
+    <!-- Tipps -->
+    <div class="tips-section">
+        <h3>Praktische Tipps</h3>
+        <ul>
+            <li><strong>ÖPNV-Tagesticket:</strong> RTM Pass 24h (~5,20 €) für Metro, Bus & Tram – lohnt sich für den Bus 60 zur Notre-Dame.</li>
+            <li><strong>Schuhe:</strong> Bequeme Laufschuhe sind ein Muss – viel Kopfsteinpflaster und steile Anstiege!</li>
+            <li><strong>Wasser:</strong> Besonders im Sommer ausreichend Wasser mitnehmen. Auf dem Weg zur Notre-Dame gibt es kaum Schatten.</li>
+            <li><strong>MuCEM:</strong> Dienstags geschlossen! Terrassen und Fort Saint-Jean sind aber immer kostenlos zugänglich.</li>
+            <li><strong>Sonnenuntergang:</strong> Im August ca. 20:30–21:00 Uhr – perfekt für den Pharo-Stopp!</li>
+            <li><strong>Sicherheit:</strong> Im Panier-Viertel und am Hafen auf Wertsachen achten, besonders abends.</li>
+            <li><strong>Vom Euromed Center:</strong> Du bist nur ca. 10 Gehminuten vom Vieux-Port und vom MuCEM entfernt – ideale Lage!</li>
+        </ul>
+    </div>
+
+    <!-- Google Maps Embed -->
+    <h2 class="section-title" style="margin-top: 2rem;">🗺️ Kartenübersicht</h2>
+    <iframe 
+        class="map-embed"
+        src="https://www.google.com/maps/embed?pb=!1m76!1m12!1m3!1d11594.5!2d5.362!3d43.295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m61!3e2!4m5!1s0x12c9c0cce1b7d5e7%3A0x44d1e127d5aad850!2sEuromed+Center%2C+Marseille!3m2!1d43.3060!2d5.3655!4m5!1s0x12c9c0b9f3c0e7a5%3A0x40819a5fd8fc8e0!2sVieux-Port%2C+Marseille!3m2!1d43.2951!2d5.3698!4m5!1s0x12c9c0ed1e42b3a7%3A0x40819a5fd8fc540!2sLe+Panier%2C+Marseille!3m2!1d43.2997!2d5.3677!4m5!1s0x12c9c0ee3f1f7777%3A0x5631d1b4e8b7e4e!2sCath%C3%A9drale+de+la+Major%2C+Marseille!3m2!1d43.2997!2d5.3648!4m5!1s0x12c9c0ec5b7c1c65%3A0x4b6e8b7e4e5631d1!2sMuCEM%2C+Marseille!3m2!1d43.2966!2d5.3612!4m5!1s0x12c9c0890bdbf8f5%3A0x40819a5fd8fd890!2sNotre-Dame+de+la+Garde%2C+Marseille!3m2!1d43.2838!2d5.3714!4m5!1s0x12c9c1044b5e8e1f%3A0x40819a5fd8fc930!2sVallon+des+Auffes%2C+Marseille!3m2!1d43.2883!2d5.3553!4m5!1s0x12c9c0b1d7a3e6d1%3A0x40819a5fd8fc940!2sPalais+du+Pharo%2C+Marseille!3m2!1d43.2927!2d5.3589!4m5!1s0x12c9c0b9f3c0e7a5%3A0x40819a5fd8fc8e0!2sVieux-Port%2C+Marseille!3m2!1d43.2951!2d5.3698!5e0!3m2!1sde!2sde!4v1692000000000!5m2!1sde!2sde"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+    <p style="text-align: center; color: #5f6368; font-size: 0.9rem;">Falls die eingebettete Karte nicht lädt, nutze den "Gesamte Route"-Button oben.</p>
+
+</div>
+
+<footer>
+    <p>Erstellt für eure Marseille-Reise 🇫🇷 | Stand: August 2026</p>
+    <p>Quellen: <a href="https://www.marseille-tourisme.com/en/blog-marseille/visit-marseille-in-one-day/">Marseille Tourisme</a> | 
+    <a href="https://culturefrancia.com/en/marseille-itinerary-1-day/">CultureFrancia</a> | 
+    <a href="https://www.itimaker.com/blog/1-day-itinerary-in-marseille">Itimaker</a></p>
+    <p style="font-size: 0.75rem; margin-top: 0.5rem;">Content was rephrased for compliance with licensing restrictions.</p>
+</footer>
+
+</body>
+</html>
