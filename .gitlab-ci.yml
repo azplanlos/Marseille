@@ -1,0 +1,11 @@
+pages:
+  stage: deploy
+  script:
+    - mkdir -p public
+    - cp marseille-tagesroute.html public/index.html
+    - cp -r images public/images
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
